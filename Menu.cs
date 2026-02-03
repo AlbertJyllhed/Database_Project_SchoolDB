@@ -35,14 +35,14 @@
         private void SelectMenuItem()
         {
             Console.Write("Select an option by number: ");
-            if (int.TryParse(Console.ReadLine(), out int choice))
+            string? input = Console.ReadLine();
+            ResetMenu(waitForConfirmation: false);
+            if (int.TryParse(input, out int choice))
             {
-                ResetMenu(waitForConfirmation: false);
                 ExecuteMenuItem(choice - 1);
             }
             else
             {
-                ResetMenu(waitForConfirmation: false);
                 DisplayErrorMessage("Invalid input. Please enter a number.");
             }
         }
@@ -77,7 +77,9 @@
                 Console.ReadKey();
             }
 
-            Console.Clear();
+            Console.Clear(); // Clears the console
+            Console.WriteLine("\x1b[3J"); // Clears the scrollback buffer
+            Console.Clear(); // Clears cursor artifacts created by command above
         }
     }
 }
