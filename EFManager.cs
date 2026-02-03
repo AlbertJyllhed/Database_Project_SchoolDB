@@ -1,11 +1,31 @@
-﻿namespace Database_Project_SchoolDB
+﻿using Database_Project_SchoolDB.Models;
+
+namespace Database_Project_SchoolDB
 {
     internal static class EFManager
     {
         internal static void GetTeachersByDepartment()
         {
-            // Implementation for retrieving teachers by department from the database
-            Console.WriteLine("Getting Teachers by Department...");
+            using (var context = new SchoolDbContext())
+            {
+                var teachersByDept = from e in context.Employees
+                                     join d in context.Departments
+                                     on e.DepartmentId equals d.Id
+                                     join et in context.EmployeeTypes
+                                     on e.EmployeeTypeId equals et.Id
+                                     where et.TypeName == "Teacher"
+                                     group e by d.DepartmentName into g
+                                     select new
+                                     {
+                                         Department = g.Key,
+                                         Count = g.Count(),
+                                     };
+
+                foreach (var item in teachersByDept)
+                {
+                    Console.WriteLine($"The {item.Department} department has {item.Count} teachers.");
+                }
+            }
         }
 
         internal static void GetAllStudents()
