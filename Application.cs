@@ -10,7 +10,8 @@
         private enum MenuIndices
         {
             MainMenu = 0,
-            EFMenu = 1
+            EFMenu = 1,
+            ADOMenu = 2
         }
 
         // Launches the application and starts the main program loop
@@ -21,13 +22,14 @@
 
             while (_running)
             {
-                GoToMenu(_activeMenuIndex);
+                _menus[_activeMenuIndex].DisplayMenu();
             }
         }
 
+        // Creates all necessary menus and adds them to the menu list
         private static void SetupMenus()
         {
-            _menus.AddRange([CreateMainMenu(), CreateEFMenu()]);
+            _menus.AddRange([CreateMainMenu(), CreateEFMenu(), CreateADOMenu()]);
         }
 
         // Creates the main menu with its items and actions
@@ -38,13 +40,21 @@
             mainMenu.AddMenuItem(new MenuItem("Entity Framework Operations", () =>
             {
                 GoToMenu((int)MenuIndices.EFMenu);
-            }, requiresConfirmation: false));
+            }, 
+            requiresConfirmation: false));
+
+            mainMenu.AddMenuItem(new MenuItem("ADO.NET Operations", () =>
+            {
+                GoToMenu((int)MenuIndices.ADOMenu);
+            },
+            requiresConfirmation: false));
 
             // Exiting the application
             mainMenu.AddMenuItem(new MenuItem("Exit", () =>
             {
                 _running = false;
-            }, requiresConfirmation: false));
+            }, 
+            requiresConfirmation: false));
 
             return mainMenu;
         }
@@ -55,19 +65,46 @@
             var efMenu = new Menu("Entity Framework Menu");
 
             efMenu.AddMenuItem(new MenuItem("Fetch Students",
-                DBManager.GetAllStudents));
+                EFManager.GetAllStudents));
             efMenu.AddMenuItem(new MenuItem("Fetch Teachers by Department",
-                DBManager.GetTeachersByDepartment));
+                EFManager.GetTeachersByDepartment));
             efMenu.AddMenuItem(new MenuItem("Fetch Active Courses",
-                DBManager.GetActiveCourses));
+                EFManager.GetActiveCourses));
 
             // Returning to previous menu
             efMenu.AddMenuItem(new MenuItem("Back", () =>
             {
                 GoToMenu(_previousMenuIndex);
-            }, requiresConfirmation: false));
+            }, 
+            requiresConfirmation: false));
 
             return efMenu;
+        }
+
+        // Creates the ADO.NET menu with its items and actions
+        private static Menu CreateADOMenu()
+        {
+            var adoMenu = new Menu("ADO.NET Menu");
+
+            adoMenu.AddMenuItem(new MenuItem("Get Employees", 
+                ADOManager.GetEmployees));
+            adoMenu.AddMenuItem(new MenuItem("Add New Employee", 
+                ADOManager.AddNewEmployee));
+            adoMenu.AddMenuItem(new MenuItem("Get Student Grades", 
+                ADOManager.GetStudentGrades));
+            adoMenu.AddMenuItem(new MenuItem("Get Salary Per Department", 
+                ADOManager.GetSalaryPerDepartment));
+            adoMenu.AddMenuItem(new MenuItem("Get Median Salary Per Department", 
+                ADOManager.GetMedianSalaryPerDepartment));
+
+            // Returning to previous menu
+            adoMenu.AddMenuItem(new MenuItem("Back", () =>
+            {
+                GoToMenu(_previousMenuIndex);
+            },
+            requiresConfirmation: false));
+
+            return adoMenu;
         }
 
         // Navigates to the specified menu index and displays it
@@ -75,7 +112,7 @@
         {
             _previousMenuIndex = _activeMenuIndex;
             _activeMenuIndex = index;
-            _menus[index].DisplayMenu();
+            _menus[_activeMenuIndex].DisplayMenu();
         }
     }
 }
