@@ -1,6 +1,6 @@
 ﻿namespace Database_Project_SchoolDB
 {
-    internal static class DBManager
+    internal static class EFManager
     {
         internal static void GetTeachersByDepartment()
         {
