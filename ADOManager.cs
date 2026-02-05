@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Database_Project_SchoolDB
 {
@@ -9,9 +10,15 @@ namespace Database_Project_SchoolDB
             "Integrated Security = True;" +
             "Trust Server Certificate = True;";
 
+        // Displays all teachers and which department they work in
         internal static void GetEmployees()
         {
-            string query = "SELECT * FROM Employees";
+            string query =
+                "SELECT FirstName, LastName, DepartmentName, DateOfHire " +
+                "FROM Employees e " +
+                "JOIN EmployeeTypes et ON e.EmployeeTypeId = et.Id " +
+                "JOIN Departments d ON e.DepartmentId = d.Id " +
+                "WHERE et.TypeName = 'Teacher'";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -23,11 +30,15 @@ namespace Database_Project_SchoolDB
                     {
                         while (reader.Read())
                         {
+                            string[] table = new string[reader.FieldCount];
+
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                Console.WriteLine($"{reader.GetName(i)}: {reader.GetValue(i)}");
+                                string column = reader.GetValue(i).ToString() ?? "Unknown";
+                                table[i] = column;
                             }
-                            Console.WriteLine("----------------------------------------");
+
+                            Utils.DisplayTable(table);
                         }
                     }
                 }
@@ -40,9 +51,11 @@ namespace Database_Project_SchoolDB
             }
         }
 
+        // Adds a new employee to the database
         internal static void AddNewEmployee(string firstName, string lastName, decimal salary)
         {
-            string query = "INSERT INTO Employees (FirstName, LastName, Salary, EmployeeTypeId, DepartmentId) " +
+            string query =
+                "INSERT INTO Employees (FirstName, LastName, Salary, EmployeeTypeId, DepartmentId) " +
                 "VALUES (@FirstName, @LastName, @Salary, @EmployeeTypeId, DepartmentId)";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -69,9 +82,90 @@ namespace Database_Project_SchoolDB
             }
         }
 
-        internal static void GetStudentGrades(string personalNumber)
+        // Finds a student by their first name, last name, or personal number and returns their ID
+        internal static int FindStudent()
         {
-            Console.WriteLine("Getting Student Grades...");
+            Utils.InputString("Please enter search term: ", out string student);
+            int studentId = 0;
+
+            string query =
+                "SELECT Id FROM Students " +
+                "WHERE FirstName LIKE @SearchTerm " +
+                "OR LastName LIKE @SearchTerm " +
+                "OR PersonalNumber LIKE @SearchTerm";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@SearchTerm", $"%{student}%");
+
+                    try
+                    {
+                        connection.Open();
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                studentId = reader.GetInt32(0);
+                                Console.WriteLine($"Student found with ID: {studentId}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+                connection.Close();
+            }
+
+            return studentId;
+        }
+
+        internal static void GetStudentGrades(int studentId)
+        {
+            string query =
+                "SELECT * FROM Grades g " +
+                "JOIN Students s ON g.StudentId = s.Id " +
+                "WHERE s.Id = @StudentId";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                using (var command =new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@StudentId", studentId);
+
+                    try
+                    {
+                        connection.Open();
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string[] table = new string[reader.FieldCount];
+
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    string column = reader.GetValue(i).ToString() ?? "Unknown";
+                                    table[i] = column;
+                                }
+
+                                Utils.DisplayTable(table);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                    connection.Close();
+                }
+            }
         }
 
         internal static void GetSalaryPerDepartment()

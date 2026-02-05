@@ -98,8 +98,8 @@
 
             adoMenu.AddMenuItem(new MenuItem("Get Student Grades", () =>
             {
-                Utils.InputString("Please enter the student's personal number: ", out string personalNumber);
-                ADOManager.GetStudentGrades(personalNumber);
+                int studentId = ADOManager.FindStudent();
+                ADOManager.GetStudentGrades(studentId);
             }));
             adoMenu.AddMenuItem(new MenuItem("Get Salary Per Department", 
                 ADOManager.GetSalaryPerDepartment));
