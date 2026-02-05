@@ -40,16 +40,18 @@ namespace Database_Project_SchoolDB
             }
         }
 
-        internal static void AddNewEmployee()
+        internal static void AddNewEmployee(string firstName, string lastName, decimal salary)
         {
             string query = "INSERT INTO Employees (FirstName, LastName, Salary, EmployeeTypeId, DepartmentId) " +
-                "VALUES (@FirstName, @LastName, @Email, @Age)";
+                "VALUES (@FirstName, @LastName, @Salary, @EmployeeTypeId, DepartmentId)";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 using (var command = new SqlCommand(query, connection))
                 {
-                    //command.Parameters.AddWithValue("@FirstName", firstName);
+                    command.Parameters.AddWithValue("@FirstName", firstName);
+                    command.Parameters.AddWithValue("@LastName", lastName);
+                    command.Parameters.AddWithValue("@Salary", salary);
 
                     try
                     {
@@ -67,7 +69,7 @@ namespace Database_Project_SchoolDB
             }
         }
 
-        internal static void GetStudentGrades()
+        internal static void GetStudentGrades(string personalNumber)
         {
             Console.WriteLine("Getting Student Grades...");
         }
