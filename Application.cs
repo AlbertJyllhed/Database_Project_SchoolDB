@@ -88,10 +88,19 @@
 
             adoMenu.AddMenuItem(new MenuItem("Get Employees", 
                 ADOManager.GetEmployees));
-            adoMenu.AddMenuItem(new MenuItem("Add New Employee", 
-                ADOManager.AddNewEmployee));
-            adoMenu.AddMenuItem(new MenuItem("Get Student Grades", 
-                ADOManager.GetStudentGrades));
+
+            adoMenu.AddMenuItem(new MenuItem("Add New Employee", () =>
+            {
+                Utils.InputString("Please enter the new employee's name: ", out string name);
+                string[] nameParts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                ADOManager.AddNewEmployee(nameParts[0], nameParts[1], 20000.00m);
+            }));
+
+            adoMenu.AddMenuItem(new MenuItem("Get Student Grades", () =>
+            {
+                Utils.InputString("Please enter the student's personal number: ", out string personalNumber);
+                ADOManager.GetStudentGrades(personalNumber);
+            }));
             adoMenu.AddMenuItem(new MenuItem("Get Salary Per Department", 
                 ADOManager.GetSalaryPerDepartment));
             adoMenu.AddMenuItem(new MenuItem("Get Median Salary Per Department", 

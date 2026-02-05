@@ -1,4 +1,5 @@
 ﻿using Database_Project_SchoolDB.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Database_Project_SchoolDB
 {
@@ -21,14 +22,14 @@ namespace Database_Project_SchoolDB
 
                 foreach (var student in students)
                 {
-                    string table = string.Format("|{0,-40}|{1,-20}|{2,-5}|", 
-                        Utils.CenterString(student.Name, 40), 
-                        Utils.CenterString(student.PersonalNumber, 20), 
-                        Utils.CenterString(student.ClassName, 5));
+                    string table = string.Format("|{0,-40}|{1,-20}|{2,-6}|",
+                        Utils.CenterString(student.Name, 40),
+                        Utils.CenterString(student.PersonalNumber, 20),
+                        Utils.CenterString(student.ClassName, 6));
 
-                    string bottom = new string('-', table.Length);
+                    string line = new string('-', table.Length);
 
-                    Console.WriteLine($"{table}\n{bottom}");
+                    Console.WriteLine($"{line}\n{table}\n{line}");
                 }
             }
         }
@@ -50,10 +51,22 @@ namespace Database_Project_SchoolDB
                         Count = g.Count(),
                     };
 
+                //var departmentName = context.Departments.EntityType.GetTableName();
+                //var tableNames = context.Model.GetEntityTypes();
+                //foreach (var table in tableNames)
+                //{
+                //    Console.WriteLine(table.GetTableName());
+                //}
+
                 foreach (var item in teachersByDept)
                 {
-                    string teacherString = item.Count == 1 ? "teacher" : "teachers";
-                    Console.WriteLine($"The {item.Department} department has {item.Count} {teacherString}.");
+                    string table = string.Format("|{0,-30}|{1,-6}|",
+                        Utils.CenterString(item.Department, 30),
+                        Utils.CenterString(item.Count.ToString(), 6));
+
+                    string line = new string('-', table.Length);
+
+                    Console.WriteLine($"{line}\n{table}\n{line}");
                 }
             }
         }

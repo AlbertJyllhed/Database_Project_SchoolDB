@@ -2,6 +2,12 @@
 {
     public static class Utils
     {
+        public static void InputString(string prompt, out string result)
+        {
+            Console.Write(prompt);
+            result = Console.ReadLine() ?? string.Empty;
+        }
+
         public static string CenterString(string s, int width)
         {
             if (s.Length >= width)
