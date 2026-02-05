@@ -1,4 +1,7 @@
-﻿namespace Database_Project_SchoolDB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Database_Project_SchoolDB.Models;
 
 public partial class Employee
 {
@@ -17,6 +20,8 @@ public partial class Employee
     public int? DepartmentId { get; set; }
 
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual Department? Department { get; set; }
 

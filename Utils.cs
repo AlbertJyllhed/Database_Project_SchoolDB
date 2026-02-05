@@ -1,4 +1,6 @@
-﻿namespace Database_Project_SchoolDB
+﻿using Database_Project_SchoolDB.Models;
+
+namespace Database_Project_SchoolDB
 {
     public static class Utils
     {
