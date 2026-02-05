@@ -1,5 +1,4 @@
 ﻿using Database_Project_SchoolDB.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Database_Project_SchoolDB
 {
@@ -22,15 +21,11 @@ namespace Database_Project_SchoolDB
 
                 foreach (var student in students)
                 {
-                    string table = $"|{Utils.CenterString(student.Name, 40)}|";
-
-                    table += $"|{Utils.CenterString(student.PersonalNumber, 20)}|";
-
-                    table += $"|{Utils.CenterString(student.ClassName, 6)}|";
-
-                    string line = new string('-', table.Length);
-
-                    Console.WriteLine($"{line}\n{table}\n{line}");
+                    Utils.DisplayTable([
+                        student.Name,
+                        student.PersonalNumber,
+                        student.ClassName
+                    ]);
                 }
             }
         }
@@ -61,13 +56,10 @@ namespace Database_Project_SchoolDB
 
                 foreach (var item in teachersByDept)
                 {
-                    string table = string.Format("|{0,-30}|{1,-6}|",
-                        Utils.CenterString(item.Department, 30),
-                        Utils.CenterString(item.Count.ToString(), 6));
-
-                    string line = new string('-', table.Length);
-
-                    Console.WriteLine($"{line}\n{table}\n{line}");
+                    Utils.DisplayTable([
+                        item.Department,
+                        item.Count.ToString()
+                    ]);
                 }
             }
         }
@@ -78,18 +70,23 @@ namespace Database_Project_SchoolDB
             using (var context = new SchoolDbContext())
             {
                 var activeCourses =
-                    from s in context.Subjects
-                    where s.Students.Count() > 0
+                    from c in context.Courses
+                    where c.StartDate < DateOnly.FromDateTime(DateTime.Today) &&
+                    c.EndDate > DateOnly.FromDateTime(DateTime.Today)
                     select new
                     {
-                        CourseName = s.SubjectName,
-                        Students = s.Students.Count()
+                        CourseName = c.Subject.SubjectName,
+                        c.StartDate,
+                        c.EndDate
                     };
 
                 foreach (var course in activeCourses)
                 {
-                    string studentString = course.Students == 1 ? "student" : "students";
-                    Console.WriteLine($"{course.Students} {studentString} studying the {course.CourseName} course.");
+                    Utils.DisplayTable([
+                        course.CourseName,
+                        course.StartDate.ToString(),
+                        course.EndDate.ToString()
+                    ]);
                 }
             }
         }

@@ -7,7 +7,7 @@ public partial class Subject
 {
     public int Id { get; set; }
 
-    public string? SubjectName { get; set; }
+    public string SubjectName { get; set; } = null!;
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 }
