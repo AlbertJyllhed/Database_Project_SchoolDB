@@ -22,10 +22,11 @@ namespace Database_Project_SchoolDB
 
                 foreach (var student in students)
                 {
-                    string table = string.Format("|{0,-40}|{1,-20}|{2,-6}|",
-                        Utils.CenterString(student.Name, 40),
-                        Utils.CenterString(student.PersonalNumber, 20),
-                        Utils.CenterString(student.ClassName, 6));
+                    string table = $"|{Utils.CenterString(student.Name, 40)}|";
+
+                    table += $"|{Utils.CenterString(student.PersonalNumber, 20)}|";
+
+                    table += $"|{Utils.CenterString(student.ClassName, 6)}|";
 
                     string line = new string('-', table.Length);
 

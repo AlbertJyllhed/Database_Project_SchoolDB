@@ -1,4 +1,7 @@
-﻿namespace Database_Project_SchoolDB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Database_Project_SchoolDB.Models;
 
 public partial class Class
 {

@@ -1,4 +1,7 @@
-﻿namespace Database_Project_SchoolDB.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Database_Project_SchoolDB.Models;
 
 public partial class Subject
 {
@@ -6,5 +9,5 @@ public partial class Subject
 
     public string? SubjectName { get; set; }
 
-    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 }
