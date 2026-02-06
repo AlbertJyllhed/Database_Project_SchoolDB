@@ -1,6 +1,4 @@
-﻿using Database_Project_SchoolDB.Models;
-
-namespace Database_Project_SchoolDB
+﻿namespace Database_Project_SchoolDB
 {
     public static class Utils
     {
@@ -8,6 +6,27 @@ namespace Database_Project_SchoolDB
         {
             Console.Write(prompt);
             result = Console.ReadLine() ?? string.Empty;
+            Console.Clear();
+        }
+
+        public static void InputInt(string prompt, out int result)
+        {
+            Console.Write(prompt);
+            while (!int.TryParse(Console.ReadLine(), out result))
+            {
+                Console.Write("Invalid input. Please enter a valid integer: ");
+            }
+            Console.Clear();
+        }
+
+        public static void InputDecimal(string prompt, out decimal result)
+        {
+            Console.Write(prompt);
+            while (!decimal.TryParse(Console.ReadLine(), out result))
+            {
+                Console.Write("Invalid input. Please enter a valid decimal number: ");
+            }
+            Console.Clear();
         }
 
         public static string CenterString(string s, int width)
