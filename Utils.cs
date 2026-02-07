@@ -1,4 +1,6 @@
-﻿namespace Database_Project_SchoolDB
+﻿using System.Globalization;
+
+namespace Database_Project_SchoolDB
 {
     public static class Utils
     {
@@ -6,6 +8,27 @@
         {
             Console.Write(prompt);
             result = Console.ReadLine() ?? string.Empty;
+            Console.Clear();
+        }
+
+        public static void InputFirstAndLastName(string prompt, out string firstName, out string lastName)
+        {
+            Console.Write(prompt);
+
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+            string fullName = textInfo.ToTitleCase(Console.ReadLine() ?? "Unknown");
+
+            string[] nameParts = fullName.Split(' ', StringSplitOptions.TrimEntries);
+            if (nameParts.Length >= 2)
+            {
+                firstName = nameParts[0];
+                lastName = nameParts[1];
+            }
+            else
+            {
+                firstName = fullName;
+                lastName = string.Empty;
+            }
             Console.Clear();
         }
 

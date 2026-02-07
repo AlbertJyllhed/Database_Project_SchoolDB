@@ -66,8 +66,10 @@
 
             efMenu.AddMenuItem(new MenuItem("Fetch Students",
                 EFManager.GetAllStudents));
+
             efMenu.AddMenuItem(new MenuItem("Fetch Teachers by Department",
                 EFManager.GetTeachersByDepartment));
+
             efMenu.AddMenuItem(new MenuItem("Fetch Active Courses",
                 EFManager.GetActiveCourses));
 
@@ -91,18 +93,49 @@
 
             adoMenu.AddMenuItem(new MenuItem("Add New Employee", () =>
             {
-                Utils.InputString("Please enter the new employee's name: ", out string name);
-                string[] nameParts = name.Split(' ', StringSplitOptions.TrimEntries);
+                Utils.InputFirstAndLastName("Please enter the new employee's name: ", 
+                    out string firstName, out string lastName);
+
                 Utils.InputDecimal("Please enter the new employee's salary: ", out decimal salary);
-                //ADOManager.AddNewEmployee(nameParts[0], nameParts[1], salary, employeeTypeId, departmentId);
+
+                int departmentId = ADOManager.ChooseID(IdType.Department);
+                int employeeTypeId = ADOManager.ChooseID(IdType.EmployeeType);
+
+                ADOManager.AddNewEmployee(firstName, lastName, salary, employeeTypeId, departmentId);
             }));
 
-            adoMenu.AddMenuItem(new MenuItem("Get Student Grades", 
-                ADOManager.GetStudentGrades));
+            adoMenu.AddMenuItem(new MenuItem("Get Student Grades", () =>
+            {
+                Utils.InputString("Please enter a search term to find student grades " +
+                "(first name, last name, or personal number): ", out string searchTerm);
+
+                ADOManager.GetStudentGrades(searchTerm);
+            }));
+
             adoMenu.AddMenuItem(new MenuItem("Get Salary Per Department", 
                 ADOManager.GetSalaryPerDepartment));
+
             adoMenu.AddMenuItem(new MenuItem("Get Median Salary Per Department", 
                 ADOManager.GetMedianSalaryPerDepartment));
+
+            adoMenu.AddMenuItem(new MenuItem("Get Student Info", () =>
+            {
+                Utils.InputInt("Please enter the ID of " +
+                "the student you want to view: ", out int studentId);
+
+                ADOManager.GetStudentInfo(studentId);
+            }));
+
+            adoMenu.AddMenuItem(new MenuItem("Set Student Grade", () =>
+            {
+                int studentId = ADOManager.ChooseID(IdType.Student);
+                int courseId = ADOManager.ChooseID(IdType.Course);
+                int teacherId = ADOManager.ChooseID(IdType.Teacher);
+
+                Utils.InputString("Please enter the grade to assign: ", out string score);
+
+                ADOManager.SetStudentGrade(studentId, courseId, teacherId, score);
+            }));
 
             // Returning to previous menu
             adoMenu.AddMenuItem(new MenuItem("Back", () =>
